@@ -1,0 +1,49 @@
+[
+  {
+    "id": "user_sa_01",
+    "email": "super@gasopay.com",
+    "role": "superAdmin",
+    "name": "Super Admin"
+  },
+  {
+    "id": "user_ba_01",
+    "email": "branch1@gasopay.com",
+    "role": "branchAdmin",
+    "name": "Branch Admin One",
+    "branchId": "branch_01"
+  },
+  {
+    "id": "user_r_01",
+    "email": "rider1@example.com",
+    "role": "rider",
+    "name": "John Doe",
+    "branchId": "branch_01",
+    "nin": "12345678901",
+    "vehicleType": "Motorcycle",
+    "guarantorName": "Jane Smith",
+    "guarantorAddress": "456 Guarantor St",
+    "status": "approved",
+    "qrCode": "qr_rider1_abcdef",
+    "debt": 0
+  },
+  {
+    "id": "user_r_02",
+    "email": "rider2@example.com",
+    "role": "rider",
+    "name": "Sarah Williams",
+    "branchId": "branch_01",
+    "nin": "98765432109",
+    "vehicleType": "Tricycle",
+    "guarantorName": "Peter Jones",
+    "guarantorAddress": "789 Guarantor Ave",
+    "status": "pending",
+    "qrCode": "qr_rider2_ghijkl",
+    "debt": 15000
+  },
+  {
+    "id": "user_u_01",
+    "email": "customer@example.com",
+    "role": "regularUser",
+    "name": "Regular Customer"
+  }
+] 

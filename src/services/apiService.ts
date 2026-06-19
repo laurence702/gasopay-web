@@ -66,6 +66,16 @@ export const apiService = {
   },
 
   /**
+   * Send a POST request with FormData (multipart/form-data)
+   */
+  async postForm<T>(url: string, formData: FormData, token?: string): Promise<T> {
+    const headers: Record<string, string> = { 'Content-Type': 'multipart/form-data' };
+    if (token) Object.assign(headers, getAuthHeaders(token));
+    const response = await apiClient.post<T>(url, formData, { headers });
+    return response.data;
+  },
+
+  /**
    * Send a PUT request
    */
   async put<T, D = Record<string, unknown>>(url: string, data: D, token?: string): Promise<T> {

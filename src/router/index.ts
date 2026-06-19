@@ -295,6 +295,47 @@ const routes: Array<RouteRecordRaw> = [
           allowedRoles: [SafeRole.ADMIN, SafeRole.SUPER_ADMIN]
         },
       },
+      {
+        path: '/branch-admin/riders',
+        name: 'BranchAdminRidersList',
+        component: () => import('../views/BranchAdmin/RidersList.vue'),
+        meta: {
+          title: 'Riders',
+          requiresAuth: true,
+          allowedRoles: [SafeRole.ADMIN, SafeRole.SUPER_ADMIN]
+        },
+      },
+      // Rider routes
+      {
+        path: '/rider/dashboard',
+        name: 'RiderDashboard',
+        component: () => import('../views/Rider/Dashboard.vue'),
+        meta: { title: 'My Dashboard', requiresAuth: true, allowedRoles: [SafeRole.RIDER] },
+      },
+      {
+        path: '/rider/purchase-history',
+        name: 'RiderPurchaseHistory',
+        component: () => import('../views/Rider/PurchaseHistory.vue'),
+        meta: { title: 'Purchase History', requiresAuth: true, allowedRoles: [SafeRole.RIDER] },
+      },
+      {
+        path: '/rider/pending-payments',
+        name: 'RiderPendingPayments',
+        component: () => import('../views/Rider/PendingPayments.vue'),
+        meta: { title: 'Pending Payments', requiresAuth: true, allowedRoles: [SafeRole.RIDER] },
+      },
+      {
+        path: '/rider/upload-proof/:orderId',
+        name: 'RiderUploadProof',
+        component: () => import('../views/Rider/UploadProof.vue'),
+        meta: { title: 'Upload Payment Proof', requiresAuth: true, allowedRoles: [SafeRole.RIDER] },
+      },
+      {
+        path: '/rider/support',
+        name: 'RiderSupport',
+        component: () => import('../views/Rider/Support.vue'),
+        meta: { title: 'Support', requiresAuth: true, allowedRoles: [SafeRole.RIDER] },
+      },
     ]
   },
   {
@@ -421,7 +462,7 @@ router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
   const allowedRoles = to.meta.allowedRoles as Role[] | undefined
-  const publicPages = ['/signin', '/signup', '/password-reset', '/rider/signup']
+  const publicPages = ['/signin', '/signup', '/password-reset', '/rider/signup', '/landing']
 
   // Allow navigation to the auth callback route without any checks
   if (to.path === '/auth/callback') {
@@ -444,14 +485,17 @@ router.beforeEach(async (to, from, next) => {
     }
   }
 
-  if (to.path === '/' && authStore.isAuthenticated) {
+  if (to.path === '/') {
+    if (!authStore.isAuthenticated) {
+      return next('/landing');
+    }
     switch (currentRole) {
       case SafeRole.SUPER_ADMIN:
         return next('/admin/analytics');
       case SafeRole.ADMIN:
         return next('/branch-admin');
       case SafeRole.RIDER:
-        return next('/rider/profile');
+        return next('/rider/dashboard');
       case SafeRole.USER:
         return next('/dashboard');
       default:

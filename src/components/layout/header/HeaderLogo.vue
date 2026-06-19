@@ -1,7 +1,10 @@
 <template>
-  <router-link to="/" class="lg:hidden">
-    <img class="dark:hidden" src="/images/logo/logo.svg" alt="Logo" />
-    <img class="hidden dark:block" src="/images/logo/logo-dark.svg" alt="Logo" />
+  <router-link to="/" class="lg:hidden flex items-center">
+    <img
+      src="/src/assets/images/main_logo.svg"
+      alt="Gasopay"
+      class="h-8 w-auto object-contain dark:brightness-0 dark:invert"
+    />
   </router-link>
 </template>
 

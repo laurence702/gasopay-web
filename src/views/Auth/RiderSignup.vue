@@ -8,7 +8,7 @@
            <div class="w-full max-w-md pt-5 mx-auto">
              <!-- Back link -->
              <router-link
-               to="/"
+               to="/landing"
                class="inline-flex items-center text-sm text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 mb-4 lg:mb-0"
              >
                <svg class="stroke-current mr-1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M12.7083 5L7.5 10.2083L12.7083 15.4167" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -29,8 +29,8 @@
               </div>
               <div>
                  <!-- Error Message Placeholder -->
-                <div v-if="errorMessage || branchesError" class="mb-4 p-3 text-sm text-red-700 bg-red-100 border border-red-300 rounded-lg dark:bg-red-900/30 dark:border-red-700 dark:text-red-400">
-                  {{ errorMessage || branchesError }}
+                <div v-if="errorMessage" class="mb-4 p-3 text-sm text-red-700 bg-red-100 border border-red-300 rounded-lg dark:bg-red-900/30 dark:border-red-700 dark:text-red-400">
+                  {{ errorMessage }}
                 </div>
 
                 <form @submit.prevent="handleNextOrSubmit">
@@ -47,17 +47,25 @@
                     <!-- Branch Selection -->
                      <div>
                         <label for="branch" class="form-label">Assign Branch</label>
-                         <div v-if="branchesLoading" class="text-sm text-gray-500 dark:text-gray-400">Loading branches...</div>
-                         <div v-else-if="branchesError" class="text-sm text-red-600 dark:text-red-400">Error loading branches: {{ branchesError }}</div>
+                         <div v-if="branchesLoading" class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 py-2">
+                           <svg class="animate-spin h-4 w-4 flex-shrink-0" viewBox="0 0 24 24" fill="none"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+                           Loading branches…
+                         </div>
+                         <div v-else-if="branchesError" class="space-y-2 py-1">
+                           <p class="text-xs text-amber-600 dark:text-amber-400 font-medium">Could not reach server. Using offline branch list.</p>
+                         </div>
                          <BaseSelect
-                           v-else
+                           v-if="!branchesLoading"
                            v-model="formData.branch_id"
-                           label="" 
+                           label=""
                            :options="branchOptions"
                            required
                            selectId="rider-branch"
                            placeholder="Select a branch"
-                        />
+                         />
+                         <button v-if="branchesError && !branchesLoading" type="button" @click="fetchBranches" class="mt-1 text-xs text-brand-500 hover:text-brand-600 underline">
+                           Retry loading from server
+                         </button>
                     </div>
                   </div>
 
@@ -137,10 +145,10 @@
                   <p
                     class="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start"
                   >
-                    Already have a rider account?
+                    Already registered?
                     <router-link
-                      to="/rider/signin"
-                      class="text-brand-500 hover:text-brand-600 dark:text-brand-400"
+                      to="/signin"
+                      class="font-medium text-brand-500 hover:text-brand-600"
                     >
                       Sign In Here
                     </router-link>
@@ -247,18 +255,45 @@ onMounted(async () => {
     await fetchBranches();
 });
 
+// Offline fallback — 10 Edo State branches matching the seeder
+const EDO_BRANCHES_FALLBACK: BranchData[] = [
+  { id: 1, name: 'Benin City Central', location: '14 Akpakpava Road, Benin City, Edo State', branch_phone: '08031001001' },
+  { id: 2, name: 'Uselu Branch',       location: '22 Uselu Lagos Road, Benin City, Edo State', branch_phone: '08031001002' },
+  { id: 3, name: 'Sapele Road Branch', location: '5 Sapele Road, Benin City, Edo State', branch_phone: '08031001003' },
+  { id: 4, name: 'Ekpoma Branch',      location: '10 Irrua Road, Ekpoma, Edo State', branch_phone: '08031001004' },
+  { id: 5, name: 'Auchi Branch',       location: '3 Polytechnic Road, Auchi, Edo State', branch_phone: '08031001005' },
+  { id: 6, name: 'Uromi Branch',       location: '8 Uromi Town Centre, Esan North-East, Edo State', branch_phone: '08031001006' },
+  { id: 7, name: 'Igarra Branch',      location: '15 Igarra Main Street, Owan West, Edo State', branch_phone: '08031001007' },
+  { id: 8, name: 'Usen Branch',        location: '7 Usen Road, Ovia South-West, Edo State', branch_phone: '08031001008' },
+  { id: 9, name: 'Siluko Branch',      location: '2 Siluko Road, Ovia North-East, Edo State', branch_phone: '08031001009' },
+  { id: 10, name: 'Ehor Branch',       location: '9 Ehor Market Road, Uhunmwonde, Edo State', branch_phone: '08031001010' },
+]
+
 async function fetchBranches() {
   branchesLoading.value = true;
   branchesError.value = null;
   try {
-    // Public signup might not have a token, handle this case
-    const token = null; // Assuming no token needed for public branch list
-    // If getBranches requires a token, you might need a public endpoint or handle it differently
-    const response = await getBranches(token); // Assuming getBranches handles null token for public list
-    branches.value = response.data; // Assuming response.data is Array<BranchData>
+    // Race the API call against a 6-second timeout
+    const timeoutPromise = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error('Request timed out')), 6000)
+    )
+    const response = await Promise.race([getBranches(null), timeoutPromise]) as Awaited<ReturnType<typeof getBranches>>
+    if (Array.isArray(response.data) && response.data.length > 0) {
+      branches.value = response.data
+    } else {
+      throw new Error('Empty branch list from server')
+    }
   } catch (error: unknown) {
-    console.error('Error fetching branches:', error);
-    branchesError.value = error instanceof Error ? error.message : 'An unknown error occurred while fetching branches.';
+    console.warn('Branches fetch failed, using offline fallback:', error)
+    let msg = error instanceof Error ? error.message : 'Could not load branches from server.'
+    if (msg.includes('SQLSTATE') || msg.includes('database') || msg.includes('Connection:')) {
+      msg = 'Could not load branches from server.'
+    }
+    branchesError.value = msg
+    // Always fall back so the form is never blocked
+    if (branches.value.length === 0) {
+      branches.value = EDO_BRANCHES_FALLBACK
+    }
   } finally {
     branchesLoading.value = false;
   }
@@ -467,7 +502,11 @@ const submitForm = async () => {
           }
 
      } else if (error instanceof Error) {
-        errorMessage.value = error.message || 'An unexpected error occurred during signup.';
+        let msg = error.message || 'An unexpected error occurred during signup.'
+        if (msg.includes('SQLSTATE') || msg.includes('database') || msg.includes('Connection:')) {
+          msg = 'An unexpected server error occurred during signup. Please try again later.'
+        }
+        errorMessage.value = msg
     } else {
         errorMessage.value = 'An unknown error occurred during signup.';
     }

@@ -19,10 +19,21 @@
         !isExpanded && !isHovered ? 'lg:justify-center' : 'justify-start',
       ]"
     >
-      <router-link to="/">
-       <h1 class="text-2xl font-bold">
-        <img src="/src/assets/images/main_logo.svg" alt="gasopay-logo" height="10px">
-       </h1>
+      <router-link to="/" class="flex items-center">
+        <!-- Full logo when expanded -->
+        <img
+          v-if="isExpanded || isHovered || isMobileOpen"
+          src="/src/assets/images/main_logo.svg"
+          alt="Gasopay"
+          class="h-9 w-auto object-contain"
+        />
+        <!-- Icon-only when collapsed -->
+        <img
+          v-else
+          src="/src/assets/images/GASOPAY-logo-fn.svg"
+          alt="Gasopay"
+          class="h-8 w-8 object-contain"
+        />
       </router-link>
     </div>
     <div

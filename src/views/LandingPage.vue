@@ -14,9 +14,12 @@
             <a href="#products" class="text-gray-600 hover:text-gray-900">Products</a>
             <a href="#about" class="text-gray-600 hover:text-gray-900">About</a>
             <a href="#contact" class="text-gray-600 hover:text-gray-900">Contact</a>
-            <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+            <router-link to="/signup" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-medium">
               Get Started
-            </button>
+            </router-link>
+            <router-link to="/signin" class="text-gray-600 hover:text-gray-900 font-medium">
+              Sign In
+            </router-link>
           </div>
         </div>
       </div>
@@ -33,15 +36,20 @@
             <p class="mt-6 text-xl text-gray-600">
               Streamline your fuel management with Gasopay. We offer seamless payments and delivery for LPG, CNG, and petroleum products.
             </p>
-            <div class="mt-8 flex space-x-4">
+            <div class="mt-8 flex flex-wrap gap-3">
                 <router-link to="/signup">
                     <button class="bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-medium hover:bg-blue-700">
-                         Sign Up
+                        Sign Up
                     </button>
                 </router-link>
                 <router-link to="/signin">
                     <button class="border border-gray-300 text-gray-700 px-8 py-3 rounded-lg text-lg font-medium hover:bg-gray-50">
                         Sign In
+                    </button>
+                </router-link>
+                <router-link to="/rider/signup">
+                    <button class="border border-green-600 text-green-700 px-8 py-3 rounded-lg text-lg font-medium hover:bg-green-50" style="border-color:#00bf63;color:#00bf63;">
+                        Register as Rider
                     </button>
                 </router-link>
             </div>

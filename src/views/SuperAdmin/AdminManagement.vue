@@ -144,7 +144,11 @@ async function fetchAdmins(page: number = currentPage.value) {
     currentPage.value = page;
   } catch (error: unknown) {
     console.error("Failed to fetch admins:", error);
-    fetchError.value = error instanceof Error ? error.message : "An unknown error occurred";
+    let msg = error instanceof Error ? error.message : "An unknown error occurred"
+    if (msg.includes('SQLSTATE') || msg.includes('database') || msg.includes('Connection:')) {
+      msg = 'Failed to load admins from server due to a database/server error.'
+    }
+    fetchError.value = msg;
     admins.value = [];
     totalAdmins.value = 0;
   } finally {
@@ -165,7 +169,11 @@ async function fetchBranches() {
     branches.value = response.data;
   } catch (error: unknown) {
     console.error('Error fetching branches:', error);
-    branchesError.value = error instanceof Error ? error.message : 'An unknown error occurred while fetching branches.';
+    let msg = error instanceof Error ? error.message : 'An unknown error occurred while fetching branches.'
+    if (msg.includes('SQLSTATE') || msg.includes('database') || msg.includes('Connection:')) {
+      msg = 'Failed to load branches from server due to a database/server error.'
+    }
+    branchesError.value = msg;
   } finally {
     branchesLoading.value = false;
   }
@@ -220,7 +228,11 @@ const handleCreateAdmin = async (formData: AdminFormData) => {
                  alert('An unknown error occurred during creation.');
              }
          } else if (error instanceof Error) {
-             alert(`Creation failed: ${error.message}`);
+             let msg = error.message;
+             if (msg.includes('SQLSTATE') || msg.includes('database') || msg.includes('Connection:')) {
+                 msg = 'An unexpected server error occurred.'
+             }
+             alert(`Creation failed: ${msg}`);
          } else {
              alert('An unknown error occurred during creation.');
          }
@@ -274,7 +286,11 @@ const handleUpdateAdmin = async (formData: AdminFormData) => {
                   alert('An unknown error occurred during update.');
               }
           } else if (error instanceof Error) {
-              alert(`Update failed: ${error.message}`);
+              let msg = error.message;
+              if (msg.includes('SQLSTATE') || msg.includes('database') || msg.includes('Connection:')) {
+                  msg = 'An unexpected server error occurred.'
+              }
+              alert(`Update failed: ${msg}`);
           } else {
               alert('An unknown error occurred during update.');
           }

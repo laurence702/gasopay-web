@@ -236,7 +236,11 @@ async function fetchBranches() {
     branches.value = response.data;
   } catch (error: unknown) {
     console.error('Error fetching branches:', error);
-    branchesError.value = error instanceof Error ? error.message : 'An unknown error occurred while fetching branches.';
+    let msg = error instanceof Error ? error.message : 'An unknown error occurred while fetching branches.'
+    if (msg.includes('SQLSTATE') || msg.includes('database') || msg.includes('Connection:')) {
+      msg = 'Failed to load branches from server due to a database/server error.'
+    }
+    branchesError.value = msg;
   } finally {
     branchesLoading.value = false;
   }
@@ -411,7 +415,11 @@ const handleSubmit = async () => {
                  errorMessage.value = 'An unexpected API error occurred during creation.';
              }
         } else if (error instanceof Error) {
-            errorMessage.value = `Creation failed: ${error.message}`;
+            let msg = error.message;
+            if (msg.includes('SQLSTATE') || msg.includes('database') || msg.includes('Connection:')) {
+                msg = 'An unexpected server error occurred.'
+            }
+            errorMessage.value = `Creation failed: ${msg}`;
         } else {
             errorMessage.value = 'An unknown error occurred during creation.';
         }

@@ -1,18 +1,20 @@
 <template>
   <div
-    class="mx-auto mb-10 w-full max-w-60 rounded-2xl bg-gray-50 px-4 py-5 text-center dark:bg-white/[0.03]"
+    class="mx-auto mb-10 w-full max-w-60 rounded-2xl bg-gradient-to-br from-orange-50 to-amber-50 px-4 py-5 text-center dark:from-orange-900/20 dark:to-amber-900/20"
   >
-    <h3 class="mb-2 font-semibold text-gray-900 dark:text-white">What to display here??</h3>
-    <p class="mb-4 text-gray-500 text-theme-sm dark:text-gray-400">
-      Leading Tailwind CSS Admin Template with 400+ UI Component and Pages.
+    <img
+      src="/src/assets/images/GASOPAY-logo-fn.svg"
+      alt="Gasopay"
+      class="mx-auto mb-3 h-8 w-auto object-contain"
+    />
+    <p class="mb-4 text-xs text-gray-500 dark:text-gray-400">
+      Powering gas delivery across Nigeria.
     </p>
     <a
-      href="https://tailadmin.com/pricing"
-      target="_blank"
-      rel="nofollow"
-      class="flex items-center justify-center p-3 font-medium text-white rounded-lg bg-brand-500 text-theme-sm hover:bg-brand-600"
+      href="mailto:support@gasopay.com"
+      class="flex items-center justify-center p-3 font-medium text-white rounded-lg bg-orange-500 text-theme-sm hover:bg-orange-600 transition-colors"
     >
-      Purchase Plan
+      Contact Support
     </a>
   </div>
 </template>

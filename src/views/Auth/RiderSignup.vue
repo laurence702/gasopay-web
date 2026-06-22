@@ -455,7 +455,7 @@ const submitForm = async () => {
   fd.append('guarantors_address', formData.guarantorAddress);
   fd.append('address', formData.address);
   fd.append('branch_id', String(formData.branch_id));
-  fd.append('profile_picture_url', formData.profile_pic_url);
+  fd.append('profile_pic_url', formData.profile_pic_url);
 
   console.log('Submitting Rider Registration Data to Backend...');
 
@@ -485,7 +485,7 @@ const submitForm = async () => {
               // Optionally navigate back to the first step with errors
              const fieldsInStep1 = ['name', 'email', 'phone', 'address', 'nin', 'branch_id'];
              const fieldsInStep2 = ['guarantorName', 'guarantorPhone', 'guarantorAddress', 'vehicleType'];
-             const fieldsInStep3 = ['password', 'confirmPassword', 'profile_picture_url'];
+             const fieldsInStep3 = ['password', 'confirmPassword', 'profile_pic_url'];
 
              if (fieldsInStep1.some(field => validationErrors[field])) {
                   currentStep.value = 1;

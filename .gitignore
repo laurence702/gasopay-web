@@ -19,11 +19,11 @@ coverage
 
 
 # Ignore all files in guide directory
-guide/
 # Keep the directory but ignore all files inside it
 guide/*
 # Include the directory itself
 !guide/.gitkeep
+!guide/gasopay.json
 .env
 .env.development
 .env.production

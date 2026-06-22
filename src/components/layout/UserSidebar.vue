@@ -114,6 +114,8 @@ const isActive = (path: string) => {
 </script>
 
 <style scoped lang="postcss">
+@reference "../../assets/main.css";
+
 .menu-item {
   @apply flex items-center gap-4 p-3 rounded-lg transition-colors duration-200;
 }

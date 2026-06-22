@@ -355,12 +355,3 @@ const unbanAdmin = async (id: string) => {
 
 </script>
 
-<style scoped>
-/* Add simple button styling if not globally available */
-/* .btn {
-    @apply px-4 py-2 rounded-md font-medium text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800;
-}
-.btn-primary {
-    @apply bg-brand-500 text-white hover:bg-brand-600 focus:ring-brand-500;
-} */
-</style>

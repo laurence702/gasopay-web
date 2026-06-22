@@ -186,6 +186,8 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+@reference "../../assets/main.css";
+
 .th {
   @apply px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider;
 }

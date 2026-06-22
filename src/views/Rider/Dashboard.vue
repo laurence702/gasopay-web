@@ -196,6 +196,8 @@ onMounted(() => {
 </script>
 
 <style scoped>
+@reference "../../assets/main.css";
+
 .quick-action-card {
   @apply flex flex-col items-center justify-center p-6 bg-gray-50 dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 ease-in-out text-center;
 }
